@@ -1,3 +1,9 @@
+from flask import Flask
+from .models import db
+from .utils import run_bi_weekly_cycle
+from .chores import chores_bp
+from .tasks import tasks_bp
+
 listOfChores={
     "Dusting study",
     "Organizing study",
@@ -42,23 +48,25 @@ listOfChores={
     "Clean bedroom window",
     "Clean bedroom bathroom window"
 }
-activeList={}
 
-def fillTasks():
-    global activeList
-    if not activeList:
-        activeList = listOfChores.copy()
+app = Flask(__name__)
 
-def main():
-    fillTasks()
+# Configure database connection
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:password@localhost/chores"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    print("=== List of Chores ===")
-    for chore in listOfChores:
-        print(chore)
+db.init_app(app)
 
-    print("\n=== Active List ===")
-    for active_chore in activeList:
-        print(active_chore)
+# Register blueprints
+app.register_blueprint(chores_bp)
+app.register_blueprint(tasks_bp)
+
+# Schedule bi-weekly cycle
+from apscheduler.schedulers.background import BackgroundScheduler
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=run_bi_weekly_cycle, trigger="interval", days=14)
+scheduler.start()
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
