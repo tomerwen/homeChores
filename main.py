@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
+from pymongo import MongoClient
 import random
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+
+client = MongoClient('mongodb://mongodb-host:27017/')
+db = client['home_chores']
+chores_collection = db['chores']
 
 list_of_chores = {
     "Dusting study", "Organizing study", "Empty garbage cans", "Put shoes back in place",
@@ -65,12 +70,13 @@ def show_chores(user):
     if user not in daily_chore_assignments:
         return "Invalid user"
 
-    user_chores = daily_chore_assignments[user].get("chores")  # Use .get to handle None
+    # Fetch all chores from the MongoDB collection
+    all_chores = list(chores_collection.find())
 
-    if user_chores is None:
-        return "No chores assigned for today."
+    # Fetch the user's assigned chores
+    user_chores = daily_chore_assignments[user].get("chores") or []
 
-    return render_template('chores.html', user=user, chores=user_chores)
+    return render_template('chores.html', user=user, all_chores=all_chores, user_chores=user_chores)
 
 if __name__ == '__main__':
     app.run(debug=True)
