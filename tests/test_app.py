@@ -1,6 +1,6 @@
 # test_app.py
 import unittest
-from your_flask_app import app, db
+from main import app, db
 
 class TestApp(unittest.TestCase):
 
@@ -17,4 +17,3 @@ class TestApp(unittest.TestCase):
     def test_database_connection(self):
         response = self.app.get('/chores/Jaanuk')
         self.assertEqual(response.status_code, 200)
-        # Add more assertions to test the database-related functionality
