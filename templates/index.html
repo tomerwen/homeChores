@@ -1,0 +1,20 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chore Assignment</title>
+</head>
+<body>
+    <h1>Choose User</h1>
+    <form action="{{ url_for('set_user') }}" method="post">
+        <label for="user">Select User:</label>
+        <select name="user" id="user">
+            <option value="Jaanuk">Jaanuk</option>
+            <option value="Peach">Peach</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

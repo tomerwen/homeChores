@@ -1,0 +1,21 @@
+<!-- templates/chores.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user }}'s Chores</title>
+</head>
+<body>
+    <h1>{{ user }}'s Chores</h1>
+    {% if chores %}
+        <ul>
+            {% for chore in chores %}
+                <li>{{ chore }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No chores assigned for today.</p>
+    {% endif %}
+</body>
+</html>
